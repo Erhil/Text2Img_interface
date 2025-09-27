@@ -6,13 +6,13 @@ import torch
 from .base_model import BaseModel
 
 
-class SDXLModel(BaseModel):
+class FLUXModel(BaseModel):
     models = {
-        "base": "stabilityai/stable-diffusion-xl-base-1.0",
-        "NSFW unholy": "John6666/unholy-desire-mix-sinister-aesthetic-illustrious-v10-sdxl",
-        "NSFW janku": "John6666/janku-v5-nsfw-trained-noobai-rou-wei-illustrious-xl-v50-sdxl",
-        "NSFW crimson": "John6666/unholy-desire-mix-crimson-seduction-noobai-v20-sdxl",
-        "NSFW mala hentai": "John6666/mala-anime-mix-nsfw-pony-xl-v3-sdxl",
+        # "base": "black-forest-labs/FLUX.1-dev",
+        "NSFW niji56": "John6666/niji56-style-v3-fp8-flux",
+        # "NSFW horny" : "John6666/real-horny-v2-v2unet-fp8-flux",
+        "NSFW hentai": "John6666/xe-hentai-flux-01-fp8-flux",
+        "NSFW jib-mix" : "John6666/jib-mix-flux-v8accentueight-nsfw-bf16-flux",
     }
 
     def generate_form(self):

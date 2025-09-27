@@ -1,10 +1,7 @@
 import streamlit as st
-
-from PIL import Image
-import numpy as np
 import torch
 
-from generative_pipes import sdxl
+import generative_pipes
 
 st.set_page_config(page_title="T2I Generator",
                    layout="wide")
@@ -18,26 +15,31 @@ def main():
     The main page function then generates images based on these inputs.
     """
     gen = False
+    pipeline = None
+    prev_model = None
 
     st.header("Select generation parameters")
     mode = st.selectbox('Select mode', ('generator', "refiner"))
+    gen_models = generative_pipes.__all__
+
     #
     if mode == "generator":
-        model = st.selectbox('Select model', ('SDXL', "SD3.5_l", "SD3.5_m", "FLUX.1-dev"))
+        model = st.selectbox('Select model', gen_models)
 
-        if model == "SDXL":
-            res = sdxl.generate_form()
-        elif model == "SD3.5_l":
-            st.write("SD3.5_l")
-        elif model == "SD3.5_m":
-            st.write("SD3.5_m")
-        elif model == "FLUX.1-dev":
-            st.write("FLUX.1-dev")
+        if model != prev_model:
+            del pipeline
+            pipeline = getattr(generative_pipes, model)()
 
+        res = pipeline.generate_form()
         gen = st.button("Generate")
         if gen:
             st.write("generating...")
-            st.image(sdxl.generate_image(**res), use_container_width=False)
+            images = pipeline.generate_image(**res)
+            torch.cuda.empty_cache()
+
+            for idx, image in enumerate(images):
+                st.image(image, use_container_width=False)
+            gen = False
     elif mode == "refiner":
         st.write("refiner")
 

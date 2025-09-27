@@ -2,17 +2,16 @@ import streamlit as st
 
 from diffusers import DiffusionPipeline
 import torch
-
+from diffusers import SanaPipeline
 from .base_model import BaseModel
 
 
-class SDXLModel(BaseModel):
+class SanaModel(BaseModel):
     models = {
-        "base": "stabilityai/stable-diffusion-xl-base-1.0",
-        "NSFW unholy": "John6666/unholy-desire-mix-sinister-aesthetic-illustrious-v10-sdxl",
-        "NSFW janku": "John6666/janku-v5-nsfw-trained-noobai-rou-wei-illustrious-xl-v50-sdxl",
-        "NSFW crimson": "John6666/unholy-desire-mix-crimson-seduction-noobai-v20-sdxl",
-        "NSFW mala hentai": "John6666/mala-anime-mix-nsfw-pony-xl-v3-sdxl",
+        "base": "Efficient-Large-Model/Sana_1600M_1024px",
+        "twistedreality" : "frutiemax/twistedreality-sana-1600m-1024px"
+
+
     }
 
     def generate_form(self):
@@ -40,9 +39,8 @@ class SDXLModel(BaseModel):
                 }
 
     def load_model(self, model_name, cpu_offload, device):
-        self.pipeline_text2image = DiffusionPipeline.from_pretrained(
-            model_name
-        )
+        self.pipeline_text2image = SanaPipeline("configs/sana_config/1024ms/Sana_1600M_img1024.yaml")
+        self.pipeline_text2image.from_pretrained(f"hf://{model_name}")
         if cpu_offload:
             self.pipeline_text2image.enable_model_cpu_offload()
         else:
